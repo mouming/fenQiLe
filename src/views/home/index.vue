@@ -1,12 +1,60 @@
 <template>
   <div class="fen-home">
     <router-view></router-view>
-    <ul>
-      <router-link tag="li" to="/market">首页</router-link>
-      <router-link tag="li" to="/category">分类</router-link>
-      <router-link tag="li" to="/lecard">乐卡</router-link>
-      <router-link tag="li" to="/creditcard">信用卡</router-link>
-      <router-link tag="li" to="/center">我的</router-link>
+    <ul class="mini-nav">
+      <router-link
+        tag="li"
+        to="/market"
+      ><i class="iconfont icongouwudai"></i><span>首页</span> </router-link>
+      <router-link
+        tag="li"
+        to="/category"
+      ><i class="iconfont iconfenlei"></i><span>分类</span></router-link>
+      <router-link
+        tag="li"
+        to="/lecard"
+      ><i class="iconfont iconhuangguan"></i><span>乐卡</span></router-link>
+      <router-link
+        tag="li"
+        to="/creditcard"
+      ><i class="iconfont iconxinyongka"></i><span>信用卡</span></router-link>
+      <router-link
+        tag="li"
+        to="/center"
+      ><i class="iconfont iconwode"></i><span>我的</span></router-link>
     </ul>
   </div>
 </template>
+<style lang="scss">
+.fen-home {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  > div {
+    flex: 1;
+  }
+  .mini-nav {
+    height: 50px;
+    background: #fff;
+    display: flex;
+    border-top: 1px solid #d9d9d9;
+    box-sizing: border-box;
+    li {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+      font-size: 14px;
+      color: #969696;
+      i {
+        margin-bottom: 3px;
+        font-size: 24px;
+      }
+      &.router-link-active {
+        color: #3b9bff;
+      }
+    }
+  }
+}
+</style>
