@@ -15,12 +15,25 @@
           <li class="active"><span>优选专区</span> </li>
           <li><span>优选专区</span> </li>
           <li><span>优选专区</span> </li>
+          <li><span>优选专区</span> </li>
+          <li><span>优选专区</span> </li>
+
         </ul>
       </div>
-      <div class="category-cont">2323</div>
+      <div class="category-cont">
+        <category-list-inner></category-list-inner>
+      </div>
     </div>
   </div>
 </template>
+<script>
+import categoryListInner from '../../components/categoryListInner'
+export default {
+  components: {
+    categoryListInner
+  }
+}
+</script>
 <style lang="scss">
 .fen-category {
   display: flex;

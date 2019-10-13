@@ -34,6 +34,11 @@
     flex: 1;
   }
   .mini-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 999;
     height: 50px;
     background: #fff;
     display: flex;
