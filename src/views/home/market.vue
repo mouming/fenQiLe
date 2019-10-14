@@ -26,31 +26,31 @@
         </li>
         <li>
           <img
-            src="https://cimgs1.fenqile.com/ibanner2/M00/32/17/jagHAFsOFoOAZdjzAAAdZ-7ssB0860_96x96.png"
+            src="https://cimgs1.fenqile.com/ibanner2/M00/32/C7/jqgHAFw3TnyANyPpAAAoPZS4S2g089_96x96.png"
             alt=""
           >
-          <p>小赚一笔</p>
+          <p>旅游出行</p>
         </li>
         <li>
           <img
-            src="https://cimgs1.fenqile.com/ibanner2/M00/32/17/jagHAFsOFoOAZdjzAAAdZ-7ssB0860_96x96.png"
+            src="https://cimgs1.fenqile.com/ibanner2/M00/33/9E/jagHAFw3Cc6ASo1-AAAhq_2zi-A615_96x96.png"
             alt=""
           >
-          <p>小赚一笔</p>
+          <p>乐花借钱</p>
         </li>
         <li>
           <img
-            src="https://cimgs1.fenqile.com/ibanner2/M00/32/17/jagHAFsOFoOAZdjzAAAdZ-7ssB0860_96x96.png"
+            src="https://cimgs1.fenqile.com/ibanner/M00/02/B3/wicJAFnvA56AO2a6AAAaz3hmlmI567_96x96.png"
             alt=""
           >
-          <p>小赚一笔</p>
+          <p>乐还款</p>
         </li>
         <li>
           <img
-            src="https://cimgs1.fenqile.com/ibanner2/M00/32/17/jagHAFsOFoOAZdjzAAAdZ-7ssB0860_96x96.png"
+            src="https://cimgs1.fenqile.com/ibanner/M00/02/DA/wScJAFnvA72AagXXAAAiogTEaHo376_96x96.png"
             alt=""
           >
-          <p>小赚一笔</p>
+          <p>娱乐充值</p>
         </li>
       </ul>
       <!-- 巨无霸轮播 -->
@@ -90,19 +90,19 @@
           </li>
           <li>
             <img
-              src="https://cimgs1.fenqile.com/ibanner2/M00/38/08/jqgHAF0TP9aAJMQ5AAA-QSSug5g024_344x144.png"
+              src="https://cimgs1.fenqile.com/ibanner2/M00/00/09/j6gHAF1fojqAO9_SAABlFdLIeVw072_344x144.png"
               alt=""
             >
           </li>
           <li>
             <img
-              src="https://cimgs1.fenqile.com/ibanner2/M00/38/08/jqgHAF0TP9aAJMQ5AAA-QSSug5g024_344x144.png"
+              src="https://cimgs1.fenqile.com/ibanner2/M00/00/0D/kKgHAF0kWymAFAKCAABgx1BU7p0185_344x144.png"
               alt=""
             >
           </li>
           <li>
             <img
-              src="https://cimgs1.fenqile.com/ibanner2/M00/38/08/jqgHAF0TP9aAJMQ5AAA-QSSug5g024_344x144.png"
+              src="https://cimgs1.fenqile.com/ibanner2/M00/00/18/j6gHAF1nRZCAA6rOAABTmS3-PsA719_344x144.png"
               alt=""
             >
           </li>
@@ -239,65 +239,13 @@
         <div class="spacing-content">
           <ul class="product-lists">
             <router-link
-              to="/productList/1"
+              :to="'/productList/'+list.name"
               tag="li"
+              v-for="list in productLists"
+              :key="list.name"
             >
               <img
-                src="https://cimgs1.fenqile.com/ibanner2/M00/06/1F/j6gHAFzVO5OAYpPqAAA58LXMPLs543_344x144.jpg"
-                alt=""
-              >
-            </router-link>
-            <router-link
-              to="/productList/1"
-              tag="li"
-            >
-              <img
-                src="https://cimgs1.fenqile.com/ibanner2/M00/06/1F/j6gHAFzVO5OAYpPqAAA58LXMPLs543_344x144.jpg"
-                alt=""
-              >
-            </router-link>
-            <router-link
-              to="/productList/1"
-              tag="li"
-            >
-              <img
-                src="https://cimgs1.fenqile.com/ibanner2/M00/06/1F/j6gHAFzVO5OAYpPqAAA58LXMPLs543_344x144.jpg"
-                alt=""
-              >
-            </router-link>
-            <router-link
-              to="/productList/1"
-              tag="li"
-            >
-              <img
-                src="https://cimgs1.fenqile.com/ibanner2/M00/06/1F/j6gHAFzVO5OAYpPqAAA58LXMPLs543_344x144.jpg"
-                alt=""
-              >
-            </router-link>
-            <router-link
-              to="/productList/1"
-              tag="li"
-            >
-              <img
-                src="https://cimgs1.fenqile.com/ibanner2/M00/06/1F/j6gHAFzVO5OAYpPqAAA58LXMPLs543_344x144.jpg"
-                alt=""
-              >
-            </router-link>
-            <router-link
-              to="/productList/1"
-              tag="li"
-            >
-              <img
-                src="https://cimgs1.fenqile.com/ibanner2/M00/06/1F/j6gHAFzVO5OAYpPqAAA58LXMPLs543_344x144.jpg"
-                alt=""
-              >
-            </router-link>
-            <router-link
-              to="/productList/1"
-              tag="li"
-            >
-              <img
-                src="https://cimgs1.fenqile.com/ibanner2/M00/06/1F/j6gHAFzVO5OAYpPqAAA58LXMPLs543_344x144.jpg"
+                :src="list.url"
                 alt=""
               >
             </router-link>
@@ -308,6 +256,33 @@
     </div>
   </div>
 </template>
+<script>
+// import Axios from 'axios'
+export default {
+  data () {
+    return {
+      productLists: [
+        { url: 'https://cimgs1.fenqile.com/ibanner2/M00/06/1F/j6gHAFzVO5OAYpPqAAA58LXMPLs543_344x144.jpg', name: '手机' },
+        { url: 'https://cimgs1.fenqile.com/ibanner2/M00/06/1F/j6gHAFzVO6OAcsRYAAAmMDZ0vUE118_344x144.jpg', name: '充值' },
+        { url: 'https://cimgs1.fenqile.com/ibanner2/M00/00/11/j6gHAF1kkR2ACiSfAABYyE4hPQQ089_344x144.jpg', name: '平板' },
+        { url: 'https://cimgs1.fenqile.com/ibanner/M00/02/DE/wScJAFnwQ4CAY-QOAAAgHVLg4f4564_344x144.png', name: '电脑' },
+        { url: 'https://cimgs1.fenqile.com/ibanner2/M00/37/A2/jqgHAFzSgM-AFuxHAAA80CZoOuM402_344x144.jpg', name: '数码' },
+        { url: 'https://cimgs1.fenqile.com/ibanner2/M00/32/53/jqgHAFvlSfiAIyh-AABUITZuoC4387_344x144.png', name: '运动户外' },
+        { url: 'https://cimgs1.fenqile.com/ibanner2/M00/19/ED/jagHAFqcyVSACUy0AAAh5JrGCYA356_344x144.jpg', name: '名表' },
+        { url: 'https://cimgs1.fenqile.com/ibanner2/M00/38/2B/jagHAFyPunuAfGW2AABFYCv6wr8954_344x144.png', name: '美妆' },
+        { url: 'https://cimgs1.fenqile.com/ibanner2/M00/38/97/jagHAFzmV5WARCC7AABRE06itUM487_344x144.png', name: '鞋服' },
+        { url: 'https://cimgs1.fenqile.com/ibanner2/M00/00/18/j6gHAF1nRbGAVZmQAAA3jXZHi2M546_344x144.png', name: '电器' },
+        { url: 'https://cimgs1.fenqile.com/ibanner2/M00/06/84/j6gHAF0bAsuAA0CyAAAsHxwNkfM779_344x144.png', name: '洗面奶' },
+        { url: 'https://cimgs1.fenqile.com/ibanner2/M00/00/35/kagHAF1c3vuANOINAABpu1MstmQ937_344x144.png', name: '食品' }
+      ]
+    }
+  },
+  created () {
+    // 页面加载后立刻发送页面显示内容的axios请求
+
+  }
+}
+</script>
 <style lang="scss">
 .fen-market {
   height: 100%;

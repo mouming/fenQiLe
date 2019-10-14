@@ -130,6 +130,20 @@
     </div>
   </div>
 </template>
+<script>
+export default {
+  name: 'lecard',
+  data () {
+    return {
+
+    }
+  },
+  created () {
+
+  }
+
+}
+</script>
 <style lang="scss">
 .fen-lecard {
   height: 100%;
