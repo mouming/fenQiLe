@@ -25,6 +25,11 @@
     </ul>
   </div>
 </template>
+<script>
+export default {
+  name: 'home'
+}
+</script>
 <style lang="scss">
 .fen-home {
   background-color: #f5f7f6;

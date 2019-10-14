@@ -7,6 +7,13 @@ module.exports = {
         pathRewrite: {
           '^/api': ''
         }
+      },
+      '/channel': {
+        target: 'https://channel.m.fenqile.com',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/channel': ''
+        }
       }
     }
   }

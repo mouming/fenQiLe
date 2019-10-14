@@ -1,53 +1,39 @@
 <template>
   <div class="category-list-inner">
-    <div class="floor">
-      <p>优选平台</p>
+    <div
+      class="floor"
+      v-for="item in list"
+      :key="item.id"
+    >
+      <p>{{item.name}}</p>
       <ul class="list-items">
         <router-link
-          to="/productList/1"
+          :to="'/productList/'+good.name"
           tag="li"
+          v-for="good in item.item_list"
+          :key="good.id"
         >
           <img
-            src="http://img1.fenqile.com/oa4/M00/02/3F/IMMHAF04XnKADK9MAAAU8Jc12_I991.png"
+            :src="good.pic_url"
             alt=""
           >
-          <span>女士手表</span>
-        </router-link>
-        <router-link
-          to="/productList"
-          tag="li"
-        >
-          <img
-            src="http://img1.fenqile.com/oa4/M00/02/3F/IMMHAF04XnKADK9MAAAU8Jc12_I991.png"
-            alt=""
-          >
-          <span>女士手表</span>
-        </router-link>
-        <router-link
-          to="/productList"
-          tag="li"
-        >
-          <img
-            src="http://img1.fenqile.com/oa4/M00/02/3F/IMMHAF04XnKADK9MAAAU8Jc12_I991.png"
-            alt=""
-          >
-          <span>女士手表</span>
-        </router-link>
-        <router-link
-          to="/productList"
-          tag="li"
-        >
-          <img
-            src="http://img1.fenqile.com/oa4/M00/02/3F/IMMHAF04XnKADK9MAAAU8Jc12_I991.png"
-            alt=""
-          >
-          <span>女士手表</span>
+          <span>{{good.name}}</span>
         </router-link>
 
       </ul>
     </div>
   </div>
 </template>
+<script>
+export default {
+  props: {
+    list: {
+      type: Array,
+      required: true
+    }
+  }
+}
+</script>
 
 <style lang="scss">
 .category-list-inner {

@@ -12,33 +12,90 @@
     <div class="category-list">
       <div class="category-nav">
         <ul>
-          <li class="active"><span>优选专区</span> </li>
-          <li><span>优选专区</span> </li>
-          <li><span>优选专区</span> </li>
-          <li><span>优选专区</span> </li>
-          <li><span>优选专区</span> </li>
-          <li><span>优选专区</span> </li>
-          <li><span>优选专区</span> </li>
-          <li><span>优选专区</span> </li>
-          <li><span>优选专区</span> </li>
-          <li><span>优选专区</span> </li>
-          <li><span>优选专区</span> </li>
-          <li><span>优选专区</span> </li>
-          <li><span>优选专区</span> </li>
+          <li
+            :class="{active:active === categoryList.name}"
+            v-for="categoryList in categoryNavLists"
+            :key="categoryList.active_page_id"
+            @click='handleNav(categoryList.name, categoryList)'
+          ><span>{{categoryList.name}}</span> </li>
 
         </ul>
       </div>
       <div class="category-cont">
-        <category-list-inner></category-list-inner>
+        <category-list-inner :list='categoryContentLists'></category-list-inner>
       </div>
     </div>
   </div>
 </template>
 <script>
 import categoryListInner from '../../components/categoryListInner'
+import Axios from 'axios'
 export default {
+  name: 'category',
+  data () {
+    return {
+      categoryNavLists: [],
+      categoryContentLists: [],
+      active: ''
+    }
+  },
+  methods: {
+    handleNav (target, targetList) {
+      // 判断导航栏是否发生切换, 未切换直接退出
+      if (this.active === target) {
+        return
+      }
+      // 点击切换分类导航栏
+      this.active = target
+      // 切换导航栏后，获取新导航栏对应的列表数据
+      this.getCategoryContent(targetList)
+    },
+    getCategoryContent (page) {
+      // 先清除原分类列表内容数据
+      this.categoryContentLists = []
+      // 发送axios请求
+      Axios.post('/channel/route0002/productCategoryDetail/shoppingContentV2.json', {
+        'data': {
+          'channel_type': 2,
+          'offset_id': 0,
+          'limit': 12,
+          'page_id': page.active_page_id,
+          'action': 'shoppingContentV2'
+        },
+        'system': {},
+        'is_weex': 1
+      }).then(res => {
+        if (!res.data.data.result === 0) {
+          return
+        }
+        let result = res.data.data.result_rows.floor_list
+        if (result[0].name === '优选平台') {
+          result.shift()
+        }
+        this.categoryContentLists = result
+      })
+    }
+  },
   components: {
     categoryListInner
+  },
+  created () {
+    Axios.post('/api/route0002/productDetail/shoppingContentNew.json', {
+      'data': { 'limit': 1, 'offset_id': 0, 'page_id': 'PRPG201907230034501', 'action': 'shoppingContentNew' }, 'system': {}, 'is_weex': 1
+    }, {
+      headers: {
+
+      }
+    }).then(res => {
+      if (!res.data.data.result === 0) {
+        return
+      }
+      let result = res.data.data.result_rows.floor_list[0].item_list
+      this.categoryNavLists = result
+      // 获取分类导航栏数据后，立刻获取导航栏第一个的列表数据内容，同时改变第一个分类列表的样式
+      this.active = result[0].name
+      this.getCategoryContent(result[0])
+    })
   }
 }
 </script>
