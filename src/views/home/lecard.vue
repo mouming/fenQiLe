@@ -132,8 +132,10 @@
 </template>
 <style lang="scss">
 .fen-lecard {
-  background-color: #f5f7f6;
-  margin-bottom: 50px;
+  height: 100%;
+  padding-bottom: 50px;
+  box-sizing: border-box;
+  overflow-y: auto;
   .lecard-main {
     margin-top: 46px;
     .lecard-banner {

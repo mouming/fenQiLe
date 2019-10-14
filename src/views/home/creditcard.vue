@@ -140,8 +140,10 @@
 </template>
 <style lang="scss">
 .fen-creditcard {
-  background-color: #f5f7f6;
-  margin-bottom: 50px;
+  height: 100%;
+  padding-bottom: 50px;
+  box-sizing: border-box;
+  overflow-y: auto;
   .van-nav-bar {
     .van-nav-bar__title {
       font-size: 18px;

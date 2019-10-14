@@ -17,6 +17,14 @@
           <li><span>优选专区</span> </li>
           <li><span>优选专区</span> </li>
           <li><span>优选专区</span> </li>
+          <li><span>优选专区</span> </li>
+          <li><span>优选专区</span> </li>
+          <li><span>优选专区</span> </li>
+          <li><span>优选专区</span> </li>
+          <li><span>优选专区</span> </li>
+          <li><span>优选专区</span> </li>
+          <li><span>优选专区</span> </li>
+          <li><span>优选专区</span> </li>
 
         </ul>
       </div>
@@ -36,6 +44,9 @@ export default {
 </script>
 <style lang="scss">
 .fen-category {
+  height: 100%;
+  padding-bottom: 50px;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   .van-icon {

@@ -27,12 +27,8 @@
 </template>
 <style lang="scss">
 .fen-home {
-  display: flex;
-  flex-direction: column;
+  background-color: #f5f7f6;
   height: 100%;
-  > div {
-    flex: 1;
-  }
   .mini-nav {
     position: fixed;
     bottom: 0;
