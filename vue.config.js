@@ -1,5 +1,5 @@
-export default {
-  devServe: {
+module.exports = {
+  devServer: {
     proxy: {
       '/api': {
         target: 'https://m.fenqile.com',
