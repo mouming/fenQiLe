@@ -7,32 +7,55 @@
       :z-index="999"
     />
     <div class="lecard-main">
-      <div class="lecard-banner">
+      <!-- 未登录状态显示 -->
+      <div
+        class="lecard-banner"
+        v-if="show"
+      >
+        <div class="lecard-limit">
+          <ul class="container">
+            <li>
+              <span>购物可用额度</span>
+              <span>￥<i>1,500.00</i></span>
+            </li>
+            <li>
+              <span>借款可用额度</span>
+              <span>￥<i>900.00</i></span>
+            </li>
+          </ul>
+          <p>额度中心</p>
+          <h3>升级乐黑卡 每年预计可省1653元 限时活动中</h3>
+        </div>
+        <div class="lecard-bill">
+          <div class="left">
+            <p>10月还款</p>
+          </div>
+          <div class="right">每月11日前还款 ></div>
+        </div>
+      </div>
+
+      <!-- 登录后显示 -->
+      <div
+        class="lecard-banner"
+        v-else
+      >
         <van-swipe
           indicator-color="rgb(161,166,176)"
           :autoplay="3000"
         >
-          <van-swipe-item><img
-              src="https://cimg1.fenqile.com/ibanner2/M00/00/A0/jagHAFpm9fCAdijtAANftDA-XGg878.png"
+          <van-swipe-item
+            v-for="item in bannerLists"
+            :key="item.title"
+          ><img
+              :src="item.bg_img"
               alt=""
             >
             <div class="login-large-title">
-              <h3>- 分期还信用卡 -</h3>
-              <p>支持提前还免手续费</p>
+              <h3>{{item.title}}</h3>
+              <p>{{item.sub_title[0]}}</p>
             </div>
           </van-swipe-item>
-          <van-swipe-item><img
-              src="https://cimg1.fenqile.com/ibanner2/M00/00/A0/jagHAFpm9fCAdijtAANftDA-XGg878.png"
-              alt=""
-            ></van-swipe-item>
-          <van-swipe-item><img
-              src="https://cimg1.fenqile.com/ibanner2/M00/00/A0/jagHAFpm9fCAdijtAANftDA-XGg878.png"
-              alt=""
-            ></van-swipe-item>
-          <van-swipe-item><img
-              src="https://cimg1.fenqile.com/ibanner2/M00/00/A0/jagHAFpm9fCAdijtAANftDA-XGg878.png"
-              alt=""
-            ></van-swipe-item>
+
         </van-swipe>
         <div class="login">
           <van-button
@@ -131,15 +154,33 @@
   </div>
 </template>
 <script>
+import Axios from 'axios'
 export default {
   name: 'lecard',
   data () {
     return {
-
+      show: false,
+      bannerLists: []
     }
   },
   created () {
-
+    // 获取轮播栏的数据
+    Axios.post('/vip/route0003/lekcard/register_guide.json', {
+      'system': {
+        'os': 'H5',
+        'sign': '3567ae9623c168d307cb16cb950dfc24',
+        'controller': 'vip'
+      },
+      'data': {
+        'macCode': ''
+      }
+    }).then(res => {
+      if (!(res.data.data.result === 0)) {
+        return
+      }
+      let result = res.data.data.result_rows.wrapper
+      this.bannerLists = result
+    })
   }
 
 }
@@ -155,6 +196,8 @@ export default {
     .lecard-banner {
       position: relative;
       margin-bottom: 8px;
+      background-color: #fff;
+      overflow: hidden;
       .van-swipe {
         img {
           height: 388px;
@@ -186,6 +229,56 @@ export default {
         bottom: 20px;
         transform: translateX(-50%);
         width: 327px;
+      }
+      .lecard-limit {
+        width: 350px;
+        height: 172px;
+        background-image: url('https://cres1.fenqile.cn/web_vip_m/img/lecard/lc_bg_v2--f9e2947091.png');
+        background-size: 100% 100%;
+        margin: 0 auto;
+        color: #fff;
+        margin-top: 20px;
+        padding: 20px 20px 0;
+        box-sizing: border-box;
+        .container {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 30px;
+          li {
+            display: flex;
+            flex-direction: column;
+            span {
+              font-size: 13px;
+              line-height: 20px;
+              margin-bottom: 5px;
+              i {
+                font-size: 28px;
+              }
+            }
+          }
+        }
+        p {
+          font-size: 13px;
+          line-height: 15px;
+          margin-bottom: 10px;
+        }
+        h3 {
+          font-size: 13px;
+          text-align: center;
+          height: 36px;
+          line-height: 36px;
+          background-color: rgba(255, 255, 255, 0.4);
+          border-radius: 3px;
+        }
+      }
+      .lecard-bill {
+        height: 88px;
+        color: rgb(151, 157, 171);
+        font-size: 13px;
+        display: flex;
+        margin: 0 22px;
+        align-items: center;
+        justify-content: space-between;
       }
     }
     .lecard-broadcast {
