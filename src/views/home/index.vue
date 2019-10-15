@@ -1,6 +1,12 @@
 <template>
   <div class="fen-home">
-    <router-view></router-view>
+    <transition
+      enter-active-class="fadeInUp"
+      leave-active-class="fadeOutDown"
+      mode="out-in"
+    >
+      <router-view></router-view>
+    </transition>
     <ul class="mini-nav">
       <router-link
         tag="li"
@@ -31,6 +37,14 @@ export default {
 }
 </script>
 <style lang="scss">
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.1s cubic-bezier(0, 1.07, 0.49, 0.9);
+}
+.v-enter,
+.v-leave-to {
+  opacity: 0;
+}
 .fen-home {
   background-color: #f5f7f6;
   height: 100%;
