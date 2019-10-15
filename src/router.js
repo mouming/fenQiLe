@@ -84,7 +84,17 @@ const router = new Router({
     {
       path: '/setting',
       component: Setting
+    },
+    {
+      path: '/privacyprotocol',
+      component: () => import('./views/login/privacyprotocol.vue')
+    },
+    {
+      path: '/registerprotocol',
+      component: () => import('./views/login/registerprotocol.vue')
     }
   ]
 })
+// 路由守卫
+
 export default router
