@@ -7,32 +7,41 @@
           src="https://cimg1.fenqile.com/ibanner2/M00/37/4C/jqgHAFyHVrKAQEADAAAOydx6Ufo449.png"
           alt=""
         >
-        <!-- 登录前显示内容 -->
-        <!-- <div class="login-content">
-          <h3>登录分期乐免费开通乐卡</h3>
-          <p>最高可得5万额度 <i class="iconfont iconxiajiantoushixinxiao"></i></p>
-        </div> -->
         <!-- 登录后显示内容 -->
         <div
           class="login-name"
-          style=""
+          v-if="isLogin"
         >
           <span>xxx</span>
           <i class="iconfont iconxiajiantoushixinxiao"></i>
         </div>
+        <!-- 登录前显示内容 -->
+        <div
+          class="login-content"
+          v-else
+        >
+          <h3>登录分期乐免费开通乐卡</h3>
+          <p>最高可得5万额度 <i class="iconfont iconxiajiantoushixinxiao"></i></p>
+        </div>
+      </div>
+      <!-- 登录后显示内容 -->
+      <div
+        class="login-mes"
+        v-if="isLogin"
+      >
+        <i class="iconfont icondaipingjia"></i>
       </div>
       <!-- 登录前显示内容 -->
-      <div class="login-btn">
+      <div
+        class="login-btn"
+        v-else
+      >
         <van-button
           round
           type="info"
           size="small"
         >登录/注册</van-button>
       </div>
-      <!-- 登录后显示内容 -->
-      <!-- <div class="login-mes">
-        <i class="iconfont icondaipingjia"></i>
-      </div> -->
     </div>
     <div class="center-main">
       <div class="repay">
@@ -138,7 +147,7 @@
               <i class="iconfont iconyoujiantou"></i>
             </div>
           </li>
-          <li>
+          <li @click="toSetting">
             <div class="left">
               <i class="iconfont iconshezhi"></i>
               <p>设置</p>
@@ -152,6 +161,21 @@
     </div>
   </div>
 </template>
+<script>
+export default {
+  name: 'center',
+  data () {
+    return {
+      isLogin: false
+    }
+  },
+  methods: {
+    toSetting () {
+      this.$router.push('setting')
+    }
+  }
+}
+</script>
 <style lang="scss">
 .fen-center {
   height: 100%;

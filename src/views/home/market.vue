@@ -11,6 +11,7 @@
         <i
           class="iconfont icongouwuchekong"
           slot="action"
+          @click="toCart"
         ></i>
       </van-search>
     </div>
@@ -262,6 +263,10 @@ export default {
     handleSearch () {
       // 搜索框获取焦点跳转到搜索页面
       this.$router.push('search')
+    },
+    toCart () {
+      // 点击跳转到购物车页
+      this.$router.push('cart')
     },
     handleCar (target) {
       // 切换汽车分期栏内的车型栏样式
