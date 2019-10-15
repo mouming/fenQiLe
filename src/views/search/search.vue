@@ -20,7 +20,7 @@
           <span class="iconfont iconlajitong"></span>
         </div>
         <ul>
-          <li>123</li>
+          <li></li>
         </ul>
       </div>
       <div class="hot-search-box">
@@ -29,17 +29,23 @@
           <span class="iconfont iconshuaxin"></span>
         </div>
         <ul>
-          <li></li>
+          <li v-for="hot in hotSearch" :key="hot.title">{{hot.title}}</li>
         </ul>
       </div>
     </div>
   </div>
 </template>
 <script>
+
 import axios from 'axios'
-import { mapActions } from 'vuex'
+import { mapState,mapActions } from 'vuex'
 export default {
+  name:'hot',
+  computed:{
+    ...mapState('hotsearch',['hotSearch'])
+  },
   methods: {
+ 
     ...mapActions('hotsearch', ['posthotSearch'])
   },
 
@@ -100,6 +106,19 @@ export default {
     .hot-search {
       display: flex;
       justify-content: space-between;
+    }
+    ul{
+      display:flex;
+       flex-wrap:wrap;
+       height: 100%;
+       overflow: hidden;
+    li{
+     font-size: 12px;
+      background: #F7F7F7;
+      margin: 12px 12px 0 0;
+      padding: 12px;
+     max-width: 200px;
+    }
     }
   }
 }
