@@ -37,12 +37,12 @@
             maxlength="6"
             v-model="password"
           />
-          <span @click="validateBtn">获取取验证码</span>
+          <span @click="validateBtn">获取验证码</span>
         </li>
       </ul>
       <div class="btn-wrap">
-        <button :disabled="isValid">
-          <span>登录</span>
+        <button :disabled="isValid" value="登录">
+          <!-- <span>登录</span> -->
         </button>
       </div>
       <p class="read-wrap">
@@ -50,7 +50,8 @@
         <router-link to="./registerprotocol">用户注册协议、</router-link>
         <router-link to="./privacyprotocol">隐私保护政策</router-link>
       </p>
-      <div class="link-box">没有账号？极速注册</div>
+      <div class="link-box">没有账号？立即注册</div>
+      <div class="link-box">已有账号？立即登录</div>
     </section>
   </div>
 </template>
@@ -90,21 +91,6 @@ export default {
       }
     }
   }
-  // components: {
-  //   inputGroup
-  // },
-  // data() {
-  //   return {
-  //     phone: '',
-  //     VerifyCode: '',
-  //     error: {},
-  //     btnTitle: '获取验证码',
-  //     disabled: false
-  //   }
-  // },
-  // methods: {
-  //   getVerifyCode() {}
-  // }
 }
 </script>
 <style lang="scss">
