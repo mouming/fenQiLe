@@ -7,7 +7,10 @@
       :z-index="999"
     >
       <template #right>
-        <i class="iconfont iconfukuanfangshi"></i>
+        <i
+          class="iconfont iconfukuanfangshi"
+          @click="handleAddCard"
+        ></i>
       </template>
     </van-nav-bar>
     <!-- 信用卡主要内容 -->
@@ -17,13 +20,31 @@
           <h3>用乐卡还信用卡</h3>
           <p>信用卡额度立即恢复 轻松不逾期</p>
           <div class="login">
+            <!-- 点击信用卡按钮显示 -->
+            <!-- <van-popup
+              v-model="addCard"
+              closeable
+              position="bottom"
+              :style="{ height: '20%' }"
+            /> -->
+            <!-- 登录后显示 -->
+            <van-button
+              type="primary"
+              size="small"
+              color="rgb(68, 160, 255)"
+              v-if="isLogin"
+              @click="handleAddCard"
+            >添加信用卡</van-button>
+            <!-- 未登录显示 -->
             <van-button
               type="primary"
               size="small"
               color="rgb(68, 160, 255)"
               to="/login"
+              v-else
             >登录/注册</van-button>
           </div>
+
         </div>
 
       </div>
@@ -54,37 +75,29 @@
       <div class="credit-container">
         <div class="title">权益卡</div>
         <div class="apply">
-          <van-swipe indicator-color="rgb(161,166,176)">
-            <van-swipe-item>
+          <van-swipe
+            indicator-color="rgb(161,166,176)"
+            :autoplay="3000"
+          >
+            <van-swipe-item
+              v-for="(item, index) in applyCardLists"
+              :key="index"
+            >
               <ul class="card-lists">
-                <li>
+                <li
+                  v-for="card in item"
+                  :key="card.card_id"
+                >
                   <img
-                    src="//cimgs1.fenqile.com/product3/M00/01/DD/RbQHAFrMqJ-AIkoBAAOkiBp0XAQ799_384x240.png"
+                    :src="card.pic_url"
                     alt=""
                   >
-                  <h3>送Dickies双肩包</h3>
-                  <p>招行分期乐联名卡</p>
+                  <h3>{{card.rights_txt[0]}}</h3>
+                  <p>{{card.name}}</p>
                 </li>
-                <li>
-                  <img
-                    src="//cimgs1.fenqile.com/product3/M00/01/DD/RbQHAFrMqJ-AIkoBAAOkiBp0XAQ799_384x240.png"
-                    alt=""
-                  >
-                  <h3>送Dickies双肩包</h3>
-                  <p>招行分期乐联名卡</p>
-                </li>
-                <li>
-                  <img
-                    src="//cimgs1.fenqile.com/product3/M00/01/DD/RbQHAFrMqJ-AIkoBAAOkiBp0XAQ799_384x240.png"
-                    alt=""
-                  >
-                  <h3>送Dickies双肩包</h3>
-                  <p>招行分期乐联名卡</p>
-                </li>
+
               </ul>
             </van-swipe-item>
-            <van-swipe-item>2</van-swipe-item>
-            <van-swipe-item>3</van-swipe-item>
           </van-swipe>
         </div>
       </div>
@@ -113,21 +126,21 @@
               </li>
               <li>
                 <div class="content">
-                  <h3>较易下的信用卡</h3>
-                  <p>通过率高</p>
+                  <h3>审批速度Top5</h3>
+                  <p>最快3秒批卡</p>
                 </div>
                 <img
-                  src="https://cimg1.fenqile.com/product3/M00/94/8E/RrQHAFvrycOAAMSBAAChGJJHAMc512.png"
+                  src="https://cimg1.fenqile.com/product3/M00/83/75/RbQHAFvILfWAIVmRAAA5Yj8PhpQ400.png"
                   alt=""
                 >
               </li>
               <li>
                 <div class="content">
-                  <h3>较易下的信用卡</h3>
-                  <p>通过率高</p>
+                  <h3>第一张信用卡</h3>
+                  <p>新手办卡</p>
                 </div>
                 <img
-                  src="https://cimg1.fenqile.com/product3/M00/94/8E/RrQHAFvrycOAAMSBAAChGJJHAMc512.png"
+                  src="https://cimg1.fenqile.com/product3/M00/83/12/RrQHAFvILgaAMvvnAABF1d8rd2M492.png"
                   alt=""
                 >
               </li>
@@ -138,6 +151,61 @@
     </div>
   </div>
 </template>
+<script>
+import Axios from 'axios'
+import { Dialog } from 'vant'
+export default {
+  name: 'creditcard',
+  components: {
+    [Dialog.Component.name]: Dialog.Component
+  },
+  data () {
+    return {
+      applyCardLists: [],
+      isLogin: false
+    }
+  },
+  methods: {
+    handleAddCard () {
+      Dialog.alert({
+        message: '暂时无法添加信用卡'
+      }).then(() => {
+        // on close
+      })
+    }
+  },
+  created () {
+    // 获取信用卡列表的数据
+    Axios.post('/cw/routev2/cc/tab/queryApplyCardList.json', {
+      'data': {
+        'max_num': 6,
+        'action': 'queryApplyCardList'
+      },
+      'system': {
+        'new_version': '',
+        'uid': '',
+        'sign': '',
+        'os': 'H5',
+        'session_id': '',
+        'token_id': '',
+        'time_stamp': 1571136372567,
+        'machine_code': '',
+        'channel_id': ''
+      }
+    }).then(res => {
+      if (!(res.data.result === 0)) {
+        return
+      }
+      let result = res.data.data.result_rows.list
+      let arr = []
+      for (let i = 0; i < 3; i++) {
+        arr.push(result.shift())
+      }
+      this.applyCardLists.push(arr, result)
+    })
+  }
+}
+</script>
 <style lang="scss">
 .fen-creditcard {
   height: 100%;
@@ -239,6 +307,7 @@
           display: flex;
           li {
             flex: 1;
+            width: 33.3%;
             font-size: 12px;
             display: flex;
             flex-direction: column;
@@ -251,6 +320,11 @@
               margin-bottom: 5px;
               color: #25324e;
               font-size: 14px;
+              width: 100%;
+              overflow: hidden;
+              white-space: nowrap;
+              text-overflow: ellipsis;
+              text-align: center;
             }
             p {
               color: #979dab;

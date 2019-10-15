@@ -33,7 +33,7 @@ module.exports = {
         target: 'https://cw.m.fenqile.com',
         changeOrigin: true,
         pathRewrite: {
-          '^/vip': ''
+          '^/cw': ''
         }
       }
     }
