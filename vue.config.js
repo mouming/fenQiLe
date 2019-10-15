@@ -1,6 +1,5 @@
 module.exports = {
   devServer: {
-<<<<<<< HEAD
     proxy: {
       '/api': {
         target: 'https://m.fenqile.com',
@@ -17,8 +16,5 @@ module.exports = {
         }
       }
     }
-=======
-    proxy: 'https://m.fenqile.com'
->>>>>>> lizuzhi
   }
 }
