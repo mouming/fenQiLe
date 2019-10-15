@@ -4,12 +4,7 @@
     <div class="search-box">
       <i class="iconfont iconzuojiantou"></i>
 
-      <van-search
-        v-model="value"
-        placeholder="请输入搜索关键词"
-        show-action
-        shape="round"
-      >
+      <van-search v-model="value" placeholder="请输入搜索关键词" show-action shape="round">
         <div slot="action">搜索</div>
       </van-search>
     </div>
@@ -20,7 +15,7 @@
           <span class="iconfont iconlajitong"></span>
         </div>
         <ul>
-          <li>123</li>
+          <li></li>
         </ul>
       </div>
       <div class="hot-search-box">
@@ -29,7 +24,7 @@
           <span class="iconfont iconshuaxin"></span>
         </div>
         <ul>
-          <li></li>
+          <li v-for="hot in hotSearch" :key="hot.title" >{{hot.title}}</li>
         </ul>
       </div>
     </div>
@@ -37,18 +32,22 @@
 </template>
 <script>
 import axios from 'axios'
-import { mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 export default {
+  name: 'hot',
+  computed: {
+    ...mapState('hotsearch', ['hotSearch'])
+  },
   methods: {
     ...mapActions('hotsearch', ['posthotSearch'])
   },
 
-  data () {
+  data() {
     return {
       value: ''
     }
   },
-  created () {
+  created() {
     this.posthotSearch()
   }
 }
@@ -100,6 +99,19 @@ export default {
     .hot-search {
       display: flex;
       justify-content: space-between;
+    }
+    ul {
+      display: flex;
+      flex-wrap: wrap;
+      height: 100%;
+      overflow: hidden;
+      li {
+        font-size: 12px;
+        background: #f7f7f7;
+        margin: 12px 12px 0 0;
+        padding: 12px;
+        max-width: 200px;
+      }
     }
   }
 }

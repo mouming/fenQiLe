@@ -12,6 +12,7 @@ import Login from './views/login/login.vue'
 import Register from './views/login/register.vue'
 
 import Search from './views/search/search.vue'
+import SearchList from './views/search/list.vue'
 
 import ProductList from './views/productList/index.vue'
 import ProductDetail from './views/productDetail/index.vue'
@@ -80,6 +81,10 @@ const router = new Router({
     {
       path: '/search',
       component: Search
+    },
+    {
+      path: '/list/',
+      component: SearchList
     },
     {
       path: '/setting',
