@@ -50,16 +50,16 @@
 <script>
 export default {
   name: 'Login',
-  computed: {
-    islog() {
-      return this.mobile ? 1 : 0
-    }
-  },
-  watch: {
-    islog() {
-      console.log(1)
-    }
-  },
+  // computed: {
+  //   islog() {
+  //     return this.mobile ? 1 : 0
+  //   }
+  // },
+  // watch: {
+  //   islog() {
+  //     console.log(1)
+  //   }
+  // },
   data() {
     return {
       mobile: '',
