@@ -35,6 +35,13 @@ module.exports = {
         pathRewrite: {
           '^/cw': ''
         }
+      },
+      '/item': {
+        target: 'https://item.m.fenqile.com',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/item': ''
+        }
       }
     }
   }

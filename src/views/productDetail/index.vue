@@ -17,12 +17,14 @@
       <div class="detail-main-banner">
         <van-swipe
           :autoplay="3000"
-          indicator-color="white"
+          indicator-color="black"
         >
-          <van-swipe-item>1</van-swipe-item>
-          <van-swipe-item>2</van-swipe-item>
-          <van-swipe-item>3</van-swipe-item>
-          <van-swipe-item>4</van-swipe-item>
+          <van-swipe-item
+            v-for="(image, index) in bannerLists"
+            :key="index"
+          >
+            <img v-lazy="image" />
+          </van-swipe-item>
         </van-swipe>
       </div>
       <!-- 商品抢购时间 -->
@@ -33,29 +35,29 @@
       <!-- 商品价格 -->
       <div class="detail-main-price">
         <div class="left">
-          <h3><span>￥</span>888</h3>
-          <p>￥2299</p>
+          <h3><span>￥</span>{{priceData.real_amount}}</h3>
+          <p>￥{{priceData.amount}}</p>
         </div>
         <div class="right">
-          <h3><span>￥</span>36.55</h3>
-          <p>x36期</p>
+          <h3><span>￥</span>{{priceData.mon_pay}}</h3>
+          <p>x{{priceData.fq_num}}期</p>
         </div>
       </div>
       <!-- 商品信息 -->
       <div class="detail-main-info">
-        <h3>【12期免息 正品】Beats Solo3 Wireless蓝牙无线头戴式运动魔音 华为 小米 苹果 通用 耳机 手机 耳麦 游</h3>
-        <p>【10.18六周年庆，数码家电全场12期免息！数码领券立减150元，相机满8000减400元，家电满3999减300】</p>
+        <h3>{{mainTitle}}</h3>
+        <p>{{subtitle}}</p>
       </div>
       <!-- 商品已选择 -->
       <div class="detail-main-list">
         <div class="selected">
           <span>已选</span>
-          <p> 米老鼠90周年纪念款限量版 </p>
+          <p> {{goodType}} </p>
           <span class="iconfont iconyoujiantou"></span>
         </div>
         <div class="list-other">
           <span>送至</span>
-          <p> 广东省 广州市 番禺区 </p>
+          <p> {{addr}} </p>
           <span class="iconfont iconyoujiantou"></span>
         </div>
         <div class="list-other">
@@ -65,7 +67,10 @@
         </div>
       </div>
       <!-- 商品详情 -->
-      <div class="detail-main-intro">
+      <div
+        class="detail-main-intro"
+        v-show="getInstro.length"
+      >
         <van-tabs
           @click="handleIntro"
           sticky
@@ -106,13 +111,67 @@
 <script>
 import Vue from 'vue'
 import { Lazyload } from 'vant'
+import Axios from 'axios'
 Vue.use(Lazyload)
 export default {
+  name: 'productDetail',
   data () {
     return {
-      images: ['https://img.yzcdn.cn/vant/apple-1.jpg', 'https://img.yzcdn.cn/vant/apple-2.jpg'],
-      active: 1
+      active: 1,
+      sku_id: '',
+      relation_sku_id: [],
+      detailData: {},
+      priceData: {},
+      detailAllData: {},
+      mainPic: '',
+      subtitle: '',
+      detailIntro: {}
     }
+  },
+  computed: {
+    bannerLists () {
+      if (this.detailData.pic_list) {
+        let arr = this.detailData.pic_list.map(item => {
+          return item.pic_url
+        })
+        arr.unshift(this.mainPic)
+        return arr
+      } else {
+        return []
+      }
+    },
+    mainTitle () {
+      return this.detailData.product_name
+    },
+    addr () {
+      if (!this.detailAllData.delivery_addr) {
+        return ''
+      }
+      let address = this.detailAllData.delivery_addr
+      return `${address.province_name} ${address.city_name} ${address.area_name}`
+    },
+    goodType () {
+      if (!this.detailAllData.sku_info) {
+        return ''
+      }
+      return this.detailAllData.sku_info.sku_key_2
+    },
+    getInstro () {
+      // 得到详情提示渲染信息
+      var arr = this.detailIntro.detail_list
+      if (!arr) {
+        return []
+      } else if (arr.length === 2) {
+        arr.splice(1, 0, {
+          detail: '暂无参数',
+          name: '规格参数'
+        })
+        return arr
+      } else {
+        return []
+      }
+    }
+
   },
   methods: {
     onClickLeft () {
@@ -125,6 +184,81 @@ export default {
       console.log(name, title)
     }
 
+  },
+  created () {
+    // 得到商品的id
+    this.sku_id = this.$route.params.id
+    // 根据商品id获取商品的提示数据
+    Axios.post('/item/route0002/productDetailV2/getProductInfo.json', {
+      'data': {
+        'channel_mobile_flag': 1,
+        'channel_type': '3',
+        'sku_id': this.sku_id,
+        'module_req': [
+          'channel_params_json',
+          'hide_download_guide_json',
+          'agent_code_json',
+          'item_m_grey_config_json',
+          'item_m_feature_color_config_json'
+        ],
+        'namespace': 'hippo.ec_frd_common_params',
+        'action': 'getProductInfo'
+      },
+      'system': {},
+      'is_weex': 1
+    }).then(res => {
+      if (!(res.data.data.result === 0)) {
+        return
+      }
+      let result = res.data.data.result_rows
+      console.log(result)
+      // 商品种类id数据
+      this.relation_sku_id = result.relation_sku_id
+      // 商品提示相关数据
+      this.detailData = result.spu_info
+      // 主图片
+      this.mainPic = result.sku_info.sku_pic[0]
+    })
+    // 根据id获取商品的价格和详细信息数据
+    Axios.post('/item/route0002/productDetailV2/getPriceAndStockInfo.json', {
+      'data': {
+        'channel_mobile_flag': 1,
+        'channel_type': '3',
+        'sku_id': this.sku_id,
+        'action': 'getPriceAndStockInfo'
+      },
+      'system': {},
+      'is_weex': 1
+    }).then(res => {
+      if (!(res.data.data.result === 0)) {
+        return
+      }
+      let result = res.data.data.result_rows
+      // 得到所有数据
+      this.detailAllData = result
+      console.log(result)
+      // 获取价格
+      this.priceData = result.active_amount_info
+      // 获取副标题
+      this.subtitle = result.active_subtitle_info.product_desc
+    })
+    // 获取商品介绍栏数据
+    Axios.post('/item/route0002/productDetailV2/productDetailInfo.json', {
+      'data': {
+        'sku_id': this.sku_id
+      },
+      'system': {
+        'controller': '',
+        'time_stamp': 1571233938694
+      }
+    }).then(res => {
+      if (!(res.data.data.result === 0)) {
+        return
+      }
+      let result = res.data.data.result_rows
+      // 得到源数据
+      this.detailIntro = result
+    })
   }
 }
 </script>
@@ -143,6 +277,9 @@ export default {
     &-banner {
       height: 375px;
       background-color: #fff;
+      img {
+        width: 375px;
+      }
     }
     &-sale {
       display: flex;
