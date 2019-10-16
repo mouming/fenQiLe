@@ -2,7 +2,7 @@
   <div class="fen-search">
     <!--搜索框-->
     <div class="search-box">
-      <i class="iconfont iconzuojiantou"></i>
+      <i class="iconfont iconzuojiantou" @click="goBack"></i>
 
       <van-search v-model="value" placeholder="请输入搜索关键词" show-action shape="round">
         <div slot="action">搜索</div>
@@ -39,8 +39,10 @@ export default {
     ...mapState('hotsearch', ['hotSearch'])
   },
   methods: {
-    ...mapActions('hotsearch', ['posthotSearch'])
-  },
+    ...mapActions('hotsearch', ['posthotSearch']),
+    goBack() {
+    this.$router.back()
+  },},
 
   data() {
     return {
