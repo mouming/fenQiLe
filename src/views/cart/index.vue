@@ -9,17 +9,23 @@
     />
     <div class="container">asa</div>
     <div class="foot">
-      <label class="box">
-        <input type="checkbox" />
-        <span></span>
-      </label>
-      <div class="foot-left">合计:￥2008</div>
-      <div class="foot-right">结算</div>
+      <van-submit-bar :price="3050" button-text="结算" @submit="onSubmit">
+        <van-checkbox v-model="checked">全选</van-checkbox>
+        <!-- <span slot="tip">
+          你的收货地址不支持同城送,
+          <span>修改地址</span>
+        </span>-->
+      </van-submit-bar>
     </div>
   </div>
 </template>
 <script>
 export default {
+  data() {
+    return {
+      checked: false
+    }
+  },
   methods: {
     onClickLeft() {
       history.back()
@@ -49,63 +55,6 @@ export default {
     background: #fff;
     display: flex;
     justify-content: space-between;
-    .box {
-      position: relative;
-      display: block;
-      width: 15px;
-      height: 15px;
-      input:checked ~ span {
-        // background: #407aff;
-        background: url('./gou.jpg');
-        background-size: 100% 100%;
-      }
-      input {
-        opacity: 0;
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        left: 0;
-        top: 0;
-      }
-      // check-box {
-      //   width: 0.48rem;
-      //   height: 0.48rem;
-      //   border-style: solid;
-      //   border-color: #e3e4e8;
-      //   border-width: 1px;
-      //   background-color: #fff;
-      //   border-radius: 0.48rem;
-      //   margin-left: 10px;
-      // }
-      span {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        left: 0;
-        top: 0;
-        display: block;
-        background: #e3e4e8;
-        line-height: 50px;
-        // background: url('./gou.jpg');
-      }
-    }
-
-    .foot-left {
-      flex: 1;
-      line-height: 50px;
-      font-size: 12px;
-      margin-left: 0px;
-    }
-    .foot-right {
-      background: #407aff;
-      color: #fff;
-      width: 110px;
-      height: 50px;
-      font-size: 14px;
-      text-align: center;
-      line-height: 50px;
-      right: 0;
-    }
   }
 }
 </style>
