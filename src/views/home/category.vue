@@ -40,6 +40,7 @@ export default {
     }
   },
   methods: {
+
     handleNav (target, targetList) {
       // 判断导航栏是否发生切换, 未切换直接退出
       if (this.active === target) {
@@ -50,6 +51,7 @@ export default {
       // 切换导航栏后，获取新导航栏对应的列表数据
       this.getCategoryContent(targetList)
     },
+
     getCategoryContent (page) {
       // 先清除原分类列表内容数据
       this.categoryContentLists = []
@@ -100,6 +102,7 @@ export default {
 }
 </script>
 <style lang="scss">
+@import '../../assets/styles/common/mixins.scss';
 .fen-category {
   height: 100%;
   padding-bottom: 50px;
@@ -128,6 +131,7 @@ export default {
     overflow: hidden;
     display: flex;
     .category-nav {
+      @include clear-bar;
       width: 88px;
       overflow-y: auto;
       ul {
@@ -156,6 +160,8 @@ export default {
       background-color: #fcfcfc;
       flex: 1;
       overflow-y: auto;
+      height: 100%;
+      @include clear-bar;
     }
   }
 }

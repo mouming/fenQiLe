@@ -1,9 +1,15 @@
 <template>
   <div class="category-list-inner">
+    <van-loading
+      size="24px"
+      vertical
+      v-if="show"
+    >加载中...</van-loading>
     <div
       class="floor"
       v-for="item in list"
       :key="item.id"
+      v-else
     >
       <p>{{item.name}}</p>
       <ul class="list-items">
@@ -31,6 +37,16 @@ export default {
       type: Array,
       required: true
     }
+  },
+  data () {
+    return {
+      show: true
+    }
+  },
+  watch: {
+    list (newValue) {
+      this.show = newValue.length === 0
+    }
   }
 }
 </script>
@@ -38,7 +54,10 @@ export default {
 <style lang="scss">
 .category-list-inner {
   padding: 0 20px;
-
+  height: 100%;
+  .van-loading {
+    top: 50%;
+  }
   .floor {
     padding-bottom: 8px;
 

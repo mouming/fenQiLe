@@ -17,8 +17,6 @@
   position: relative;
 
   &::after {
-
-
     content: '';
     position: absolute;
     width: 100%;
@@ -48,9 +46,14 @@
 }
 
 @mixin pl-set {
-
   &::-webkit-input-placeholder {
     color: #b9c3d7;
     font-size: 14px;
+  }
+}
+//去除滚动条
+@mixin clear-bar {
+  &::-webkit-scrollbar {
+    display: none;
   }
 }

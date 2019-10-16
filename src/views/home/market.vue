@@ -371,6 +371,8 @@ export default {
 }
 </script>
 <style lang="scss">
+@import '../../assets/styles/common/mixins.scss';
+
 .fen-market {
   height: 100%;
   padding-bottom: 50px;
@@ -467,6 +469,8 @@ export default {
           display: flex;
           overflow: auto;
           width: 100%;
+          @include clear-bar;
+
           li {
             display: flex;
             flex-direction: column;
