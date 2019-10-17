@@ -15,10 +15,7 @@
     <div class="detail-main">
       <!-- 轮播图 -->
       <div class="detail-main-banner">
-        <van-swipe
-          :autoplay="3000"
-          indicator-color="black"
-        >
+        <van-swipe indicator-color="black">
           <van-swipe-item
             v-for="(image, index) in bannerLists"
             :key="index"
@@ -30,7 +27,7 @@
       <!-- 商品抢购时间 -->
       <div class="detail-main-sale">
         <p>乐疯抢进行中</p>
-        <p>10月23日 00:00结束</p>
+        <p>{{endTime}} </p>
       </div>
       <!-- 商品价格 -->
       <div class="detail-main-price">
@@ -71,16 +68,13 @@
         class="detail-main-intro"
         v-show="getInstro.length"
       >
-        <van-tabs
-          @click="handleIntro"
-          sticky
-        >
+        <van-tabs sticky>
           <van-tab
-            v-for="index in 3"
-            :title="'选项 ' + index"
+            v-for="(item,index) in getInstro"
+            :title="item.name"
             :key="index"
+            v-html="item.detail||'暂无'+item.name"
           >
-            内容 {{ index }}
           </van-tab>
         </van-tabs>
       </div>
@@ -98,13 +92,22 @@
           color="#be99ff"
           type="warning"
           text="加入购物车"
+          @click="handleBtn"
         />
         <van-goods-action-button
           color="#7232dd"
           type="danger"
           text="立即购买"
+          @click="handleBtn"
         />
       </van-goods-action>
+      <!-- <van-sku
+        v-model="show"
+        :sku="sku"
+        :goods="goods"
+        :goods-id="goodsId"
+        :message-config="messageConfig"
+      /> -->
     </div>
   </div>
 </template>
@@ -126,6 +129,13 @@ export default {
       mainPic: '',
       subtitle: '',
       detailIntro: {}
+      // // 商品规格相关数据
+      // show: true,
+      // sku: {},
+      // goods: {},
+      // goodsId: '',
+      // messageConfig: {}
+
     }
   },
   computed: {
@@ -140,6 +150,11 @@ export default {
         return []
       }
     },
+    endTime () {
+      let subtitle = this.detailAllData.active_subtitle_info
+      if (!subtitle) { return '' }
+      return subtitle.end_time ? subtitle.end_time.split(' ')[0] + ' 结束' : ''
+    },
     mainTitle () {
       return this.detailData.product_name
     },
@@ -151,10 +166,11 @@ export default {
       return `${address.province_name} ${address.city_name} ${address.area_name}`
     },
     goodType () {
-      if (!this.detailAllData.sku_info) {
+      let key = this.detailAllData.sku_info
+      if (!key) {
         return ''
       }
-      return this.detailAllData.sku_info.sku_key_2
+      return key.sku_key_1 + ' ' + key.sku_key_2 + ' ' + key.sku_key_3
     },
     getInstro () {
       // 得到详情提示渲染信息
@@ -163,25 +179,27 @@ export default {
         return []
       } else if (arr.length === 2) {
         arr.splice(1, 0, {
-          detail: '暂无参数',
+          detail: '',
           name: '规格参数'
         })
         return arr
       } else {
-        return []
+        arr.splice(2, 1)
+        return arr
       }
     }
 
   },
   methods: {
     onClickLeft () {
-
+      this.$router.back()
     },
     onClickRight () {
-
+      this.$router.push('/')
     },
-    handleIntro (name, title) {
-      console.log(name, title)
+    handleBtn () {
+      // 触发商品规格栏
+      this.show = true
     }
 
   },
@@ -211,7 +229,6 @@ export default {
         return
       }
       let result = res.data.data.result_rows
-      console.log(result)
       // 商品种类id数据
       this.relation_sku_id = result.relation_sku_id
       // 商品提示相关数据
@@ -236,7 +253,6 @@ export default {
       let result = res.data.data.result_rows
       // 得到所有数据
       this.detailAllData = result
-      console.log(result)
       // 获取价格
       this.priceData = result.active_amount_info
       // 获取副标题
@@ -374,10 +390,42 @@ export default {
         background-color: #407aff;
       }
       .van-tabs__content {
-        padding: 0 16px;
+        padding: 16px;
         background-color: #fff;
+        font-size: 14px;
+        color: #666;
+        table {
+          tr {
+            font-size: 13px;
+            th {
+              padding: 8px 0;
+              background-color: #f4f4f4;
+              color: #666;
+              border-bottom: 1px solid #eee;
+            }
+            td {
+              padding: 5px 10px;
+              border-bottom: 1px solid #eee;
+              &.tdTitle {
+                background-color: #fafafa;
+                border-right: 1px solid #eee;
+                width: 70px;
+                text-align: right;
+              }
+            }
+          }
+        }
+        .MsoNormal {
+          font-size: 13px;
+          line-height: 16px;
+          font-family: microsoft yahei, 'Helvetica Neue', 'pingfang sc';
+          color: #666;
+        }
+        p {
+          // width: 100%;
+        }
         img {
-          width: 100%;
+          width: 100% !important;
         }
       }
     }

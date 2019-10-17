@@ -9,7 +9,6 @@ import Creditcard from './views/home/creditcard.vue'
 import Center from './views/home/center.vue'
 
 import Login from './views/login/login.vue'
-import Register from './views/login/register.vue'
 
 import Search from './views/search/search.vue'
 import SearchList from './views/search/list.vue'
@@ -59,10 +58,6 @@ const router = new Router({
       component: Login
     },
     {
-      path: '/register',
-      component: Register
-    },
-    {
       path: '/cart',
       component: Cart
     },
@@ -88,7 +83,10 @@ const router = new Router({
     },
     {
       path: '/setting',
-      component: Setting
+      component: Setting,
+      meta: {
+        needLogin: true
+      }
     },
     {
       path: '/privacyprotocol',
@@ -101,5 +99,19 @@ const router = new Router({
   ]
 })
 // 路由守卫
+// 全局前置守卫
+router.beforeEach((to, from, next) => {
+  let userInfo = window.localStorage.getItem('userInfo')
+  if (to.meta.needLogin && !userInfo) {
+    next({
+      path: '/login',
+      query: {
+        redirect: to.fullPath
+      }
+    })
+  } else {
+    next()
+  }
+})
 
 export default router

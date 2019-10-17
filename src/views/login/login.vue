@@ -30,11 +30,19 @@
             ref="card"
             v-model="card"
           />
-          <span @click="getYzm()">获取验证码</span>
+          <button
+            @click="getYzm"
+            :disabled='!isClickYZM'
+            :class="{on:isClickYZM}"
+          >{{YZCode}}</button>
         </li>
       </ul>
       <div class="btn-wrap">
-        <button>
+        <button
+          :disabled='!isClickLog'
+          @click="toLog"
+          :class="{on:isClickLog}"
+        >
           <span>{{logarr[logindex].logNext}}</span>
         </button>
       </div>
@@ -43,14 +51,20 @@
         <router-link to="./registerprotocol">用户注册协议、</router-link>
         <router-link to="./privacyprotocol">隐私保护政策</router-link>
       </p>
-      <div class="link-box" @click="islog(logindex)">{{logarr[logindex].noAcc}}</div>
+      <div
+        class="link-box"
+        @click="islog(logindex)"
+      >{{logarr[logindex].noAcc}}</div>
     </section>
   </div>
 </template>
 <script>
+import Axios from 'axios'
+import { Dialog } from 'vant'
+import { mapMutations, mapState } from 'vuex'
 export default {
   name: 'Login',
-  data() {
+  data () {
     return {
       mobile: '',
       card: '',
@@ -68,15 +82,41 @@ export default {
           noAcc: '已有账号？立即登录'
         }
       ],
-      logindex: 0
+      logindex: 0,
+      isClickYZM: false,
+      isClickLog: false,
+      YZCode: '获取验证码'
+    }
+  },
+  computed: {
+    ...mapState('user', ['userInfo'])
+  },
+  watch: {
+    mobile () {
+      if (this.mobile.length === 13) {
+        // 激活获取验证按钮
+        this.isClickYZM = true
+      } else {
+        this.isClickYZM = false
+      }
+    },
+    card () {
+      if (this.mobile.length === 13 && this.card.length === 6) {
+        // 激活登录/注册按钮
+        this.isClickLog = true
+      } else {
+        this.isClickLog = false
+      }
     }
   },
   methods: {
-    inputMobile(e) {
+    // 引入状态管理仓库中的方法
+    ...mapMutations('user', ['getUserInfo']),
+    inputMobile (e) {
       this.formatMobile(e)
       this.mobile = this.$refs.mobile.value
     },
-    formatMobile(e) {
+    formatMobile (e) {
       let val = this.$refs.mobile.value // 不可直接用this.mobile，第一方便提取该方法降低代码耦合度，第二直接用this.mobile,在输入汉字时按下shift按键会导致无法再输入和删除内容
       let selStart = this.$refs.mobile.selectionStart // 选中区域左边界位置
       let mobileLen = val.length
@@ -96,7 +136,7 @@ export default {
         this.$refs.mobile.selectionStart = this.$refs.mobile.selectionEnd = selStart
       }
     },
-    getValue(e, val) {
+    getValue (e, val) {
       let value = ''
       if (e.type === 'keyup') {
         value = val.replace(/\D/g, '')
@@ -113,13 +153,83 @@ export default {
       }
       return value
     },
-    getYzm() {
-      if ((this.mobile.length = 13)) {
+    getYzm () {
+      // 发送验证码
+      let phone = this.mobile.split(' ').join('')
+      console.log(1)
+      // 分期乐获取不到，借用卖座
+      Axios.post('https://m.maizuo.com/gateway', {
+        'type': '1',
+        'mobile': phone,
+        'imgKey': '',
+        'imgCode': ''
+      }, {
+        headers: {
+          'X-Client-Info': '{"a":"3000","ch":"1002","v":"1.0.0","e":"156958877817523466568911"}',
+          'X-Host': 'mall.user.sms-code.send'
+        }
       }
+      ).then(res => {
+        console.log(res.data)
+        if (res.data.status === 0) {
+          Dialog.alert({
+            message: '获取验证码成功'
+          }).then(() => {
+            // 60秒验证
+            let t = 60
+            let timer = setInterval(() => {
+              this.YZCode = t + '秒后重试'
+              t--
+              if (t < 0) {
+                this.YZCode = '获取验证码'
+                this.isClickYZM = true
+                clearInterval(timer)
+              }
+            }, 1000)
+            this.isClickYZM = false
+          })
+        } else {
+          Dialog.alert({
+            message: res.data.msg
+          })
+        }
+      })
     },
-    islog() {
+    toLog () {
+      console.log(2)
+      let phone = this.mobile.split(' ').join('')
+      // 验证验证码是否输入正确
+      Axios.post('https://m.maizuo.com/gateway', {
+        'mobile': phone,
+        'smsCode': this.card,
+        'imgKey': '',
+        'imgCode': '',
+        'extra': {}
+      }, {
+        headers: {
+          'X-Client-Info': '{"a":"3000","ch":"1002","v":"1.0.0","e":"156958877817523466568911"}',
+          'X-Host': 'mall.user.sms-code-login'
+        }
+      }).then(res => {
+        console.log(res.data)
+        if (res.data.status === 0) {
+          this.getUserInfo(res.data.data)
+          //  本地保存登录状态
+          window.localStorage.setItem('userInfo', res.data.data.token)
+          this.$router.replace('/')
+        } else {
+          Dialog.alert({
+            message: res.data.msg
+          })
+        }
+      })
+    },
+    islog () {
       this.logindex = this.logindex ? 0 : 1
     }
+  },
+  components: {
+    [Dialog.Component.name]: Dialog.Component // 引入dialog组件
   }
   // methods: {
   //   getYzm() {
@@ -201,9 +311,14 @@ export default {
           font-size: 22px;
           color: #cbcccf;
         }
-        span {
+        button {
           font-size: 14px;
+          border: none;
+          background: #fff;
           color: #aaa;
+          &.on {
+            color: #3b9bff;
+          }
         }
       }
     }
@@ -222,8 +337,11 @@ export default {
         text-align: center;
         line-height: 44px;
         user-select: none;
+        &.on {
+          background-color: #3b9bff;
+          color: #fff;
+        }
         span {
-          color: #abd4ff;
           font-size: 14px;
         }
       }

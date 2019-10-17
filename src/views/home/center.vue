@@ -10,9 +10,9 @@
         <!-- 登录后显示内容 -->
         <div
           class="login-name"
-          v-if="isLogin"
+          v-if="userInfo.userId"
         >
-          <span>xxx</span>
+          <span>{{userInfo.nickName}}</span>
           <i class="iconfont iconxiajiantoushixinxiao"></i>
         </div>
         <!-- 登录前显示内容 -->
@@ -27,7 +27,7 @@
       <!-- 登录后显示内容 -->
       <div
         class="login-mes"
-        v-if="isLogin"
+        v-if="userInfo.userId"
       >
         <i class="iconfont icondaipingjia"></i>
       </div>
@@ -40,6 +40,7 @@
           round
           type="info"
           size="small"
+          to="/login"
         >登录/注册</van-button>
       </div>
     </div>
@@ -147,7 +148,10 @@
               <i class="iconfont iconyoujiantou"></i>
             </div>
           </li>
-          <li @click="toSetting">
+          <router-link
+            tag="li"
+            to="/setting"
+          >
             <div class="left">
               <i class="iconfont iconshezhi"></i>
               <p>设置</p>
@@ -155,24 +159,26 @@
             <div class="right">
               <i class="iconfont iconyoujiantou"></i>
             </div>
-          </li>
+          </router-link>
         </ul>
       </div>
     </div>
   </div>
 </template>
 <script>
+import { mapState } from 'vuex'
 export default {
   name: 'center',
   data () {
     return {
-      isLogin: false
+
     }
   },
+  computed: {
+    // 引入用户信息状态管理库
+    ...mapState('user', ['userInfo'])
+  },
   methods: {
-    toSetting () {
-      this.$router.push('setting')
-    }
   }
 }
 </script>

@@ -23,14 +23,21 @@
   </div>
 </template>
 <script>
+import { mapMutations } from 'vuex'
 export default {
   name: 'setting',
   methods: {
+    ...mapMutations('user', ['getUserInfo']),
     onClickLeft () {
       this.$router.back()
     },
     quitLogin () {
       // 将user状态库的数据清空
+      this.getUserInfo({})
+      // 清除本地登录状态
+      window.localStorage.setItem('userInfo', '')
+      // 重定向会个人中心
+      this.$router.replace('/center')
     }
   }
 }

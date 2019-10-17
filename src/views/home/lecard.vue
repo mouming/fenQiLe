@@ -10,7 +10,7 @@
       <!-- 未登录状态显示 -->
       <div
         class="lecard-banner"
-        v-if="show"
+        v-if="userInfo.userId"
       >
         <div class="lecard-limit">
           <ul class="container">
@@ -155,13 +155,17 @@
 </template>
 <script>
 import Axios from 'axios'
+import { mapState } from 'vuex'
 export default {
   name: 'lecard',
   data () {
     return {
-      show: false,
       bannerLists: []
     }
+  },
+  computed: {
+    // 引入用户信息数据
+    ...mapState('user', ['userInfo'])
   },
   created () {
     // 获取轮播栏的数据

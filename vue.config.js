@@ -42,6 +42,13 @@ module.exports = {
         pathRewrite: {
           '^/item': ''
         }
+      },
+      '/passport': {
+        target: 'https://passport.fenqile.com',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/passport': ''
+        }
       }
     }
   }

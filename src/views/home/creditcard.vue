@@ -32,7 +32,7 @@
               type="primary"
               size="small"
               color="rgb(68, 160, 255)"
-              v-if="isLogin"
+              v-if="userInfo.userId"
               @click="handleAddCard"
             >添加信用卡</van-button>
             <!-- 未登录显示 -->
@@ -154,6 +154,7 @@
 <script>
 import Axios from 'axios'
 import { Dialog } from 'vant'
+import { mapState } from 'vuex'
 export default {
   name: 'creditcard',
   components: {
@@ -164,6 +165,10 @@ export default {
       applyCardLists: [],
       isLogin: false
     }
+  },
+  computed: {
+    // 引入用户信息状态数据库
+    ...mapState('user', ['userInfo'])
   },
   methods: {
     handleAddCard () {
