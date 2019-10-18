@@ -68,7 +68,8 @@ export default {
         kw: this.kw,
         iscreate: 1
       })
-      this.bs.scrollTo(0, 0)
+      // 切换后滚动条回到初始位置
+      this.bs.scrollTo(0, -45)
     },
     goBack () {
       this.$router.back()
@@ -161,6 +162,7 @@ export default {
         flex: 1;
         text-align: center;
         line-height: 45px;
+        font-size: 14px;
         &.on {
           color: #407aff;
         }

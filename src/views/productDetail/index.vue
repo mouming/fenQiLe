@@ -33,7 +33,7 @@
       <div class="detail-main-price">
         <div class="left">
           <h3><span>￥</span>{{priceData.real_amount}}</h3>
-          <p>￥{{priceData.amount}}</p>
+          <p>{{ priceData.amount > 0 ?'￥'+priceData.amount:""}}</p>
         </div>
         <div class="right">
           <h3><span>￥</span>{{priceData.mon_pay}}</h3>
@@ -343,6 +343,9 @@ export default {
               align-self: flex-start;
             }
           }
+          p {
+            text-decoration: line-through;
+          }
         }
       }
     }
@@ -390,7 +393,7 @@ export default {
         background-color: #407aff;
       }
       .van-tabs__content {
-        padding: 16px;
+        padding: 16px 0;
         background-color: #fff;
         font-size: 14px;
         color: #666;
@@ -423,7 +426,12 @@ export default {
         }
 
         img {
-          width: 100% !important;
+          width: 375px !important;
+        }
+        .van-tab__pane {
+          div {
+            width: 100% !important;
+          }
         }
       }
     }
