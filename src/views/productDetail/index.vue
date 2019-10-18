@@ -421,9 +421,7 @@ export default {
           font-family: microsoft yahei, 'Helvetica Neue', 'pingfang sc';
           color: #666;
         }
-        p {
-          // width: 100%;
-        }
+
         img {
           width: 100% !important;
         }

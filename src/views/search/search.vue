@@ -14,7 +14,10 @@
         blur
         shape="round"
       >
-        <div slot="action">搜索</div>
+        <div
+          slot="action"
+          @click="toSearch"
+        >搜索</div>
       </van-search>
     </div>
 
@@ -34,15 +37,18 @@
       <div class="hot-search-box">
         <div class="hot-search">
           <p>热门搜索</p>
-          <span class="iconfont iconshuaxin"></span>
+          <span
+            class="iconfont iconshuaxin"
+            @click="reSearch"
+          ></span>
         </div>
         <ul>
           <router-link
             tag="li"
-            :to="'/productList/'+hot.title"
-            v-for="hot in hotSearch"
-            :key="hot.title"
-          >{{hot.title}}</router-link>
+            :to="'/productList/'+hot"
+            v-for="(hot,index) in hotSearch"
+            :key="index"
+          >{{hot}}</router-link>
         </ul>
       </div>
     </div>
@@ -63,18 +69,16 @@
   </div>
 </template>
 <script>
-import axios from 'axios'
 import { mapState, mapActions } from 'vuex'
+import axios from 'axios'
 export default {
   name: 'hot',
   computed: {
-    ...mapState('search', ['Search']),
-    ...mapState('hotsearch', ['hotSearch'])
+    ...mapState('search', ['Search'])
 
   },
   watch: {
     searchVal (val) {
-      console.log(val)
       this.showSearchList = true
       this.postSearch({
         value: val
@@ -83,28 +87,45 @@ export default {
   },
   methods: {
     ...mapActions('search', ['postSearch']),
-    ...mapActions('hotsearch', ['posthotSearch']),
     goBack () {
       this.$router.back()
-    } },
+    },
+    reSearch () {
+      this.posthotSearch()
+    },
+    posthotSearch () {
+      axios.post('/api/route0002/productSearch/querySearchBoxConfig.json', {
+        data: {
+          ab_flags: ['search_revision_v1'],
+          action: 'querySearchBoxConfig'
+        },
+        system: {},
+        is_weex: 1
+      }).then(response => {
+        // console.log(response.data)
+        if (response.data.result === 0) {
+          this.hotSearch = response.data.data.result_rows.hot_search.map(item => item.title)
+        }
+      })
+    },
+    toSearch () {
+      this.$router.push('/productList/' + this.searchVal)
+    }
+  },
 
   data () {
     return {
       searchVal: '',
       showSearchList: false,
-      value: ''
+      value: '',
+      hotSearch: []
     }
   },
 
   created () {
-    this.postSearch({
-
-    })
+    this.postSearch({})
     this.showSearchList = false
-    this.posthotSearch(
-      {
-      }
-    )
+    this.posthotSearch()
   }
 }
 </script>

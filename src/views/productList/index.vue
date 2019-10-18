@@ -15,160 +15,84 @@
           placeholder="请输入搜索关键词"
           show-action
           shape="round"
+          @focus="onFocus"
         >
           <div slot="action">搜索</div>
         </van-search>
       </div>
-      <van-tabs
-        v-model="activeName"
-        @click="chgFilmType"
-        :class="{on:ison}"
-        ref="list"
-      >
-        <div class="abc">
-          <van-tab
-            title="综合"
-            name="default"
-          >
-            <ul>
-              <router-link
-                tag="li"
-                :to="'/productDetail/'+list.sku_id"
-                class="shop-link"
-                v-for="list in ShopList"
-                :key="list.sku_id"
-              >
-                <div class="shop-photo">
-                  <img
-                    :src="list.sku_pic"
-                    alt
-                  />
-                </div>
-                <div class="shop-text">
-                  <div class="shop-title">{{list.product_name}}</div>
-                  <div class="evaluate">
-                    <div class="shop-money">￥{{list.real_amount}}</div>
-                    <div class="shop-staging">{{list.mon_pay_str}}/月</div>
-                    <div class="shop-evaluate">
-                      <p>{{list.total_comment_num}}评价</p>|
-                      <p>{{list.good_comment_rate}}%好评率</p>
-                    </div>
-                  </div>
-                </div>
-              </router-link>
-            </ul>
-          </van-tab>
-          <van-tab
-            title="销量"
-            name="sku_sell_num"
-          >
-            <ul>
-
-              <router-link
-                tag="li"
-                :to="'/productDetail/'+list.sku_id"
-                class="shop-link"
-                v-for="list in ShopList"
-                :key="list.sku_id"
-              >
-                <div class="shop-photo">
-                  <img
-                    :src="list.sku_pic"
-                    alt
-                  />
-                </div>
-                <div class="shop-text">
-                  <div class="shop-title">{{list.product_name}}</div>
-                  <div class="evaluate">
-                    <div class="shop-money">￥{{list.real_amount}}</div>
-                    <div class="shop-staging">{{list.mon_pay_str}}/月</div>
-                    <div class="shop-evaluate">
-                      <p>{{list.total_comment_num}}评价</p>|
-                      <p>{{list.good_comment_rate}}%好评率</p>
-                    </div>
-                  </div>
-                </div>
-              </router-link>
-            </ul>
-          </van-tab>
-          <van-tab
-            title="价格"
-            name="amount"
-          >
-            <ul>
-              <router-link
-                tag="li"
-                :to="'/productDetail/'+list.sku_id"
-                class="shop-link"
-                v-for="list in ShopList"
-                :key="list.sku_id"
-              >
-                <div class="shop-photo">
-                  <img
-                    :src="list.sku_pic"
-                    alt
-                  />
-                </div>
-                <div class="shop-text">
-                  <div class="shop-title">{{list.product_name}}</div>
-                  <div class="evaluate">
-                    <div class="shop-money">￥{{list.real_amount}}</div>
-                    <div class="shop-staging">{{list.mon_pay_str}}/月</div>
-                    <div class="shop-evaluate">
-                      <p>{{list.total_comment_num}}评价</p>|
-                      <p>{{list.good_comment_rate}}%好评率</p>
-                    </div>
-                  </div>
-                </div>
-              </router-link>
-            </ul>
-          </van-tab>
-        </div>
-
-      </van-tabs>
+      <div :class="['shop-main',{'shop-fixed':isFixed}]">
+        <ul
+          class="shop-tabs"
+          :style="scrollFixed"
+        >
+          <li
+            v-for="tab in tabs"
+            :key="tab.id"
+            :class="{on:curFilmType === tab.id}"
+            @click="chgFilmType(tab.id)"
+          >{{tab.name}}</li>
+        </ul>
+        <shop-content :ShopList="ShopList"></shop-content>
+      </div>
     </div>
   </div>
 </template>
 <script>
-import axios from 'axios'
 import { mapState, mapActions, mapMutations } from 'vuex'
 import BScroll from 'better-scroll'
+import shopContent from '../../components/porductListCont'
 export default {
   name: 'shopList',
 
   computed: {
-    ...mapState('shopList', ['ShopList'])
+    ...mapState('shopList', ['ShopList']),
+    scrollFixed () {
+      return {
+        position: this.isFixed ? 'fixed' : '',
+        top: this.scTop + 'px'
+      }
+    }
   },
   methods: {
     ...mapActions('shopList', ['postShopList']),
     ...mapMutations('shopList', ['setShopList']),
     /* *切换当前的影片类型
      */
-    chgFilmType (name, title) {
-      console.log(name, title)
+    chgFilmType (id) {
       this.setShopList([])
-      this.curFilmType = name
+      this.curFilmType = id
       this.postShopList({
-        boxname: name,
+        boxname: id,
         kw: this.kw,
         iscreate: 1
       })
     },
     goBack () {
       this.$router.back()
+    },
+    onFocus () {
+      this.$router.push('/search')
     }
   },
   data () {
     return {
-      curFilmType: 'sku_sell_num', // 当前的影片类型
+      curFilmType: 'default', // 当前的影片类型
       curPageNum: 1, // 当前的页码数
       value: '',
-      activeName: 'default',
       ison: true,
-      kw: this.$route.params.class
+      kw: this.$route.params.class,
+      tabs: [
+        { name: '综合', id: 'default' },
+        { name: '销量', id: 'sku_sell_num' },
+        { name: '价格', id: 'amount' }
+      ],
+      isFixed: false,
+      scTop: 0
     }
   },
-
+  components: {
+    shopContent
+  },
   mounted () {
     let bs = new BScroll(this.$refs.box, {
       click: true,
@@ -176,16 +100,21 @@ export default {
       pullUpLoad: true
     })
     bs.on('scroll', data => {
-      console.log(this.$refs.list)
+      // 监听滚动事件
+      if (data.y < -54) {
+        this.isFixed = true
+        this.scTop = Math.abs(data.y)
+      } else {
+        this.isFixed = false
+      }
     })
     bs.on('pullingUp', () => {
       this.curPageNum++
       this.postShopList({
-        boxname: name,
+        boxname: this.curFilmType,
         PageNum: this.curPageNum,
         iscreate: 0,
         kw: this.kw,
-
         callback: () => {
           bs.finishPullUp()
         }
@@ -193,7 +122,6 @@ export default {
     })
   },
   created () {
-    console.log(1234)
     this.kw = this.$route.params.class
     this.postShopList({
       kw: this.kw,
@@ -209,62 +137,23 @@ export default {
 .shop-list-link {
   height: 100%;
   width: 375px;
-
-  .van-tabs {
-    &.on {
-      .van-tabs__wrap {
-        position: fixed;
-        top: 60px;
-        left: 0;
+  .shop-main {
+    &.shop-fixed {
+      .pro-shop {
+        margin-top: 45px;
       }
     }
-    .van-hairline--top-bottom {
-      top: 0;
+    .shop-tabs {
+      display: flex;
+      height: 45px;
       width: 100%;
-    }
-    .van-tabs__content {
-      margin-top: 50px;
-      .shop-link {
-        height: 120px;
-        padding: 20px 16px 20px 16px;
-        display: flex;
-        border-bottom: 1px #abadb2 solid;
-        .shop-photo {
-          width: 120px;
-          height: 120px;
-
-          img {
-            height: 100%;
-          }
-        }
-        .shop-text {
-          height: 34px;
-          margin: 0 0 0 20px;
-
-          .shop-title {
-            font-size: 13px;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-          }
-          .evaluate {
-            margin: 20px 0 0 0;
-            .shop-money {
-              font-size: 11px;
-              margin: 8px 0 0 0;
-            }
-            .shop-staging {
-              font-size: 16px;
-              color: red;
-              margin: 8px 0 0 0;
-            }
-            .shop-evaluate {
-              margin: 10px 0 0 0;
-              font-size: 11px;
-              display: flex;
-            }
-          }
+      background-color: #fff;
+      li {
+        flex: 1;
+        text-align: center;
+        line-height: 45px;
+        &.on {
+          color: #407aff;
         }
       }
     }

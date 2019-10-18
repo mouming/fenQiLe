@@ -5,8 +5,7 @@ export default {
     Search: []
   },
 
-  getters: {
-  },
+  getters: {},
   mutations: {
     setSearch(state, payload) {
       state.Search = payload
@@ -21,9 +20,7 @@ export default {
           is_weex: 1
         })
         .then(response => {
-        //  console.log(response.data)
           if (response.data.result === 0) {
-            console.log(response.data.data.result_rows)
             commit('setSearch', response.data.data.result_rows)
           }
         })

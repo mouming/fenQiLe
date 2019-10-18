@@ -30,16 +30,14 @@ export default {
         })
         .then(response => {
           if (response.data.result === 0) {
-            console.log(response.data.data)
-            let res =response.data.data.result_rows.sku_list
-            if(!payload.iscreate){
-              res=state.ShopList.concat(response.data.data.result_rows.sku_list)
+            let res = response.data.data.result_rows.sku_list
+            if (!payload.iscreate) {
+              res = state.ShopList.concat(
+                response.data.data.result_rows.sku_list
+              )
             }
             // commit('setShopList',response.data.data.result_rows.sku_list)
-            commit(
-              'setShopList',
-              res
-            )
+            commit('setShopList', res)
             if (payload.callback) {
               payload.callback()
             }
