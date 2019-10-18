@@ -7,12 +7,12 @@ export default {
 
   getters: {},
   mutations: {
-    setShopList(state, paylood) {
-      state.ShopList = paylood
+    setShopList(state, payload) {
+      state.ShopList = payload
     }
   },
   actions: {
-    postShopList({ commit }, paylood) {
+    postShopList({ commit, state }, payload) {
       axios
         .post('/api/route0002/productSearch/queryGoodsList.json', {
           data: {
@@ -20,19 +20,29 @@ export default {
             action: 'queryGoodsList',
             is_app: 1,
             is_from_weex: 1,
-            keyword: '阿迪达斯男鞋',
-            page: 1,
+            keyword: payload.kw,
+            page: payload.PageNum,
             sort_direction: 'desc',
-            sort_field: paylood.boxname,
-            use_orig_word: 0
+            sort_field: payload.boxname
           },
           system: {},
           is_weex: 1
         })
         .then(response => {
-          console.log(response.data)
           if (response.data.result === 0) {
-            commit('setShopList', response.data.data.result_rows.sku_list)
+            console.log(response.data.data)
+            let res =response.data.data.result_rows.sku_list
+            if(!payload.iscreate){
+              res=state.ShopList.concat(response.data.data.result_rows.sku_list)
+            }
+            // commit('setShopList',response.data.data.result_rows.sku_list)
+            commit(
+              'setShopList',
+              res
+            )
+            if (payload.callback) {
+              payload.callback()
+            }
           }
         })
     }
