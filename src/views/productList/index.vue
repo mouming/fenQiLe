@@ -1,39 +1,40 @@
 <template>
-  <div
-    class="shop-list-link"
-    ref="box"
-  >
+  <div class="shop-list-link">
     <!--搜索框-->
-    <div>
-      <div class="search-box">
-        <i
-          class="iconfont iconzuojiantou"
-          @click="goBack"
-        ></i>
-        <van-search
-          v-model="value"
-          placeholder="请输入搜索关键词"
-          show-action
-          shape="round"
-          @focus="onFocus"
-        >
-          <div slot="action">搜索</div>
-        </van-search>
-      </div>
-      <div :class="['shop-main',{'shop-fixed':isFixed}]">
-        <ul
-          class="shop-tabs"
-          :style="scrollFixed"
-        >
-          <li
-            v-for="tab in tabs"
-            :key="tab.id"
-            :class="{on:curFilmType === tab.id}"
-            @click="chgFilmType(tab.id)"
-          >{{tab.name}}</li>
-        </ul>
+    <div class="search-box">
+      <i
+        class="iconfont iconzuojiantou"
+        @click="goBack"
+      ></i>
+      <van-search
+        v-model="value"
+        placeholder="请输入搜索关键词"
+        show-action
+        shape="round"
+        @focus="onFocus"
+      >
+        <div slot="action">搜索</div>
+      </van-search>
+    </div>
+    <div :class="['shop-main',{'shop-fixed':isFixed}]">
+      <ul
+        class="shop-tabs"
+        :style="scrollFixed"
+      >
+        <li
+          v-for="tab in tabs"
+          :key="tab.id"
+          :class="{on:curFilmType === tab.id}"
+          @click="chgFilmType(tab.id)"
+        >{{tab.name}}</li>
+      </ul>
+      <div
+        class="shop-scroll"
+        ref="box"
+      >
         <shop-content :ShopList="ShopList"></shop-content>
       </div>
+
     </div>
   </div>
 </template>
@@ -49,7 +50,8 @@ export default {
     scrollFixed () {
       return {
         position: this.isFixed ? 'fixed' : '',
-        top: this.scTop + 'px'
+        top: 0,
+        left: 0
       }
     }
   },
@@ -66,6 +68,7 @@ export default {
         kw: this.kw,
         iscreate: 1
       })
+      this.bs.scrollTo(0, 0)
     },
     goBack () {
       this.$router.back()
@@ -87,7 +90,7 @@ export default {
         { name: '价格', id: 'amount' }
       ],
       isFixed: false,
-      scTop: 0
+      bs: {}
     }
   },
   components: {
@@ -99,11 +102,12 @@ export default {
       probeType: 3,
       pullUpLoad: true
     })
+    this.bs = bs
     bs.on('scroll', data => {
       // 监听滚动事件
       if (data.y < -54) {
         this.isFixed = true
-        this.scTop = Math.abs(data.y)
+        // this.scTop = Math.abs(data.y)
       } else {
         this.isFixed = false
       }
@@ -137,7 +141,12 @@ export default {
 .shop-list-link {
   height: 100%;
   width: 375px;
+  display: flex;
+  flex-direction: column;
   .shop-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
     &.shop-fixed {
       .pro-shop {
         margin-top: 45px;
@@ -155,6 +164,13 @@ export default {
         &.on {
           color: #407aff;
         }
+      }
+    }
+    .shop-scroll {
+      flex: 1;
+      overflow-y: auto;
+      &::-webkit-scrollbar {
+        display: none;
       }
     }
   }
