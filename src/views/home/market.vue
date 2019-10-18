@@ -374,6 +374,7 @@ export default {
 @import '../../assets/styles/common/mixins.scss';
 
 .fen-market {
+  @include clear-bar;
   height: 100%;
   padding-bottom: 50px;
   box-sizing: border-box;
