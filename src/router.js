@@ -2,22 +2,6 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 import Home from './views/home/index.vue'
-import Market from './views/home/market.vue'
-import Category from './views/home/category.vue'
-import Lecard from './views/home/lecard.vue'
-import Creditcard from './views/home/creditcard.vue'
-import Center from './views/home/center.vue'
-
-import Login from './views/login/login.vue'
-
-import Search from './views/search/search.vue'
-import SearchList from './views/search/list.vue'
-
-import ProductList from './views/productList/index.vue'
-import ProductDetail from './views/productDetail/index.vue'
-import Collect from './views/collect/index.vue'
-import Cart from './views/cart/index.vue'
-import Setting from './views/setting/index.vue'
 
 Vue.use(Router)
 
@@ -29,23 +13,38 @@ const router = new Router({
       children: [
         {
           path: 'market',
-          component: Market
+          component: () => import('./views/home/market.vue'),
+          meta: {
+            title: '分期乐'
+          }
         },
         {
           path: 'category',
-          component: Category
+          component: () => import('./views/home/category.vue'),
+          meta: {
+            title: '商品分类'
+          }
         },
         {
           path: 'lecard',
-          component: Lecard
+          component: () => import('./views/home/lecard.vue'),
+          meta: {
+            title: '乐卡'
+          }
         },
         {
           path: 'creditcard',
-          component: Creditcard
+          component: () => import('./views/home/creditcard.vue'),
+          meta: {
+            title: '信用卡'
+          }
         },
         {
           path: 'center',
-          component: Center
+          component: () => import('./views/home/center.vue'),
+          meta: {
+            title: '我的'
+          }
         },
         {
           path: '',
@@ -55,52 +54,85 @@ const router = new Router({
     },
     {
       path: '/login',
-      component: Login
+      component: () => import('./views/login/login.vue'),
+      meta: {
+        title: '登录'
+      }
     },
     {
       path: '/cart',
-      component: Cart
+      component: () => import('./views/cart/index.vue'),
+      meta: {
+        title: '购物车'
+      }
     },
     {
       path: '/collect',
-      component: Collect
+      component: () => import('./views/collect/index.vue'),
+      meta: {
+        title: '收藏'
+      }
     },
     {
       path: '/productList/:class',
-      component: ProductList
+      component: () => import('./views/productList/index.vue'),
+      meta: {
+        title: '分期乐'
+      }
     },
     {
       path: '/productDetail/:id',
-      component: ProductDetail
+      component: () => import('./views/productDetail/index.vue'),
+      meta: {
+        title: '商品详情'
+      }
     },
     {
       path: '/search',
-      component: Search
+      component: () => import('./views/search/search.vue'),
+      meta: {
+        title: '搜索'
+      }
     },
     {
       path: '/list/',
-      component: SearchList
+      component: () => import('./views/search/list.vue'),
+      meta: {
+        title: '分期乐'
+      }
     },
     {
       path: '/setting',
-      component: Setting,
+      component: () => import('./views/setting/index.vue'),
       meta: {
-        needLogin: true
+        needLogin: true,
+        title: '设置'
       }
     },
     {
       path: '/privacyprotocol',
-      component: () => import('./views/login/privacyprotocol.vue')
+      component: () => import('./views/login/privacyprotocol.vue'),
+      meta: {
+        title: '隐私保护政策'
+      }
     },
     {
       path: '/registerprotocol',
-      component: () => import('./views/login/registerprotocol.vue')
+      component: () => import('./views/login/registerprotocol.vue'),
+      meta: {
+        title: '注册协议'
+      }
     }
   ]
 })
 // 路由守卫
 // 全局前置守卫
 router.beforeEach((to, from, next) => {
+  // 路由发生变化改变页面title
+  if (to.meta.title) {
+    document.title = to.meta.title
+  }
+  // 登录状态拦截
   let userInfo = window.localStorage.getItem('userInfo')
   if (to.meta.needLogin && !userInfo) {
     next({
