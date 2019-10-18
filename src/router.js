@@ -95,13 +95,6 @@ const router = new Router({
       }
     },
     {
-      path: '/list/',
-      component: () => import('./views/search/list.vue'),
-      meta: {
-        title: '分期乐'
-      }
-    },
-    {
       path: '/setting',
       component: () => import('./views/setting/index.vue'),
       meta: {

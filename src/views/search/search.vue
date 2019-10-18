@@ -2,13 +2,26 @@
   <div class="fen-search">
     <!--搜索框-->
     <div class="search-box">
-      <i class="iconfont iconzuojiantou"></i>
+      <i
+        class="iconfont iconzuojiantou"
+        @click="goBack"
+      ></i>
 
-      <van-search v-model="value" placeholder="请输入搜索关键词" show-action shape="round">
+      <van-search
+        v-model="searchVal"
+        placeholder="请输入搜索关键词"
+        show-action
+        blur
+        shape="round"
+      >
         <div slot="action">搜索</div>
       </van-search>
     </div>
-    <div class="history-hot-box">
+
+    <div
+      class="history-hot-box"
+      v-if="!showSearchList"
+    >
       <div class="history">
         <div class="his-search">
           <p>历史搜索</p>
@@ -24,10 +37,29 @@
           <span class="iconfont iconshuaxin"></span>
         </div>
         <ul>
-          <li v-for="hot in hotSearch" :key="hot.title" >{{hot.title}}</li>
+          <router-link
+            tag="li"
+            :to="'/productList/'+hot.title"
+            v-for="hot in hotSearch"
+            :key="hot.title"
+          >{{hot.title}}</router-link>
         </ul>
       </div>
     </div>
+    <div
+      class="box"
+      v-else
+    >
+      <ul>
+        <router-link
+          tag="li"
+          :to="'/productList/'+commodity.word "
+          v-for="commodity in Search"
+          :key="commodity.rank"
+        >{{ commodity.word }}</router-link>
+      </ul>
+    </div>
+
   </div>
 </template>
 <script>
@@ -36,19 +68,43 @@ import { mapState, mapActions } from 'vuex'
 export default {
   name: 'hot',
   computed: {
+    ...mapState('search', ['Search']),
     ...mapState('hotsearch', ['hotSearch'])
+
+  },
+  watch: {
+    searchVal (val) {
+      console.log(val)
+      this.showSearchList = true
+      this.postSearch({
+        value: val
+      })
+    }
   },
   methods: {
-    ...mapActions('hotsearch', ['posthotSearch'])
-  },
+    ...mapActions('search', ['postSearch']),
+    ...mapActions('hotsearch', ['posthotSearch']),
+    goBack () {
+      this.$router.back()
+    } },
 
-  data() {
+  data () {
     return {
+      searchVal: '',
+      showSearchList: false,
       value: ''
     }
   },
-  created() {
-    this.posthotSearch()
+
+  created () {
+    this.postSearch({
+
+    })
+    this.showSearchList = false
+    this.posthotSearch(
+      {
+      }
+    )
   }
 }
 </script>
@@ -62,8 +118,17 @@ export default {
     display: flex;
     height: 54px;
     line-height: 54px;
+    .van-search__content--round {
+      height: 30px;
+      margin: 0 10px 0 0;
+      line-height: 30px;
+    }
+    .van-search__action {
+      height: 30px;
+      line-height: 30px;
+    }
     i {
-      width: 54px;
+      width: 40px;
       font-size: 22px;
       text-align: center;
     }
@@ -79,6 +144,25 @@ export default {
       }
     }
   }
+
+  .box {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+    ul {
+      width: 100%;
+      padding: 0 20px 0 20px;
+      li {
+        height: 50px;
+        line-height: 50px;
+        cursor: pointer;
+        border-bottom: #e8eaea 1px solid;
+        font-size: 14px;
+        color: #394050;
+      }
+    }
+  }
+
   .history-hot-box {
     padding: 31px 20px 0 20px;
     .history {
@@ -89,6 +173,10 @@ export default {
         width: 335px;
         display: flex;
         justify-content: space-between;
+        p {
+          color: #394050;
+          font-size: 14px;
+        }
       }
     }
   }
@@ -99,6 +187,10 @@ export default {
     .hot-search {
       display: flex;
       justify-content: space-between;
+      p {
+        color: #394050;
+        font-size: 14px;
+      }
     }
     ul {
       display: flex;
@@ -111,6 +203,7 @@ export default {
         margin: 12px 12px 0 0;
         padding: 12px;
         max-width: 200px;
+        color: #394050;
       }
     }
   }

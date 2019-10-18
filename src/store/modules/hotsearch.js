@@ -8,12 +8,13 @@ export default {
 
   getters: {},
   mutations: {
-    sethotSearch(state, paylood) {
-      state.hotSearch = paylood
+    sethotSearch(state, payload) {
+      state.hotSearch = payload
     }
   },
   actions: {
-    posthotSearch({ commit }, paylood) {
+    posthotSearch({ commit }, payload) {
+      console.log(123)
       axios
         .post('/api/route0002/productSearch/querySearchBoxConfig.json', {
           data: {
@@ -24,8 +25,9 @@ export default {
           is_weex: 1
         })
         .then(response => {
-          console.log(response.data)
+          // console.log(response.data)
           if (response.data.result === 0) {
+            console.log(response.data)
             commit('sethotSearch', response.data.data.result_rows.hot_search)
           }
         })
